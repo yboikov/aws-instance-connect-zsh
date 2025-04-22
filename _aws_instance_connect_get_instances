@@ -1,0 +1,62 @@
+#!/usr/bin/env zsh
+
+_aws_instance_connect_tabalign() {
+    awk -F'\t' '
+        {
+          for (i = 1; i <= NF; i++) {
+            field[i, NR] = $i
+            if (length($i) > max[i]) max[i] = length($i)
+          }
+          rows = NR
+          cols = NF > cols ? NF : cols
+        }
+        END {
+          for (r = 1; r <= rows; r++) {
+            for (c = 1; c <= cols; c++) {
+              printf "%-*s", max[c], field[c, r]
+              if (c < cols) printf "\t"
+            }
+            printf "\n"
+          }
+        }'
+}
+
+_aws_instance_connect_get_instances() {
+    (
+        if [[ -n "$1" ]]; then
+            filters=("--filters" "$@")
+        fi
+
+
+        echo -e "InstanceId\tName\tPlatformDetails\tPrivateIpAddress\tState\tKeyName\tAvailabilityZone\tInstanceType\tSecurityGroups\tTags"
+        aws ec2 describe-instances "${filters[@]}" \
+            --query 'Reservations[*].Instances[*].{ 
+                       InstanceId: InstanceId,
+                       Name: Tags[?Key==`Name`]|[0].Value,
+                       PlatformDetails: PlatformDetails,
+                       PrivateIpAddress: PrivateIpAddress,
+                       InstanceType: InstanceType,
+                       KeyName: KeyName,
+                       AvailabilityZone: Placement.AvailabilityZone,
+                       State: State.Name,
+                       SecurityGroups: SecurityGroups,
+                       Tags: Tags
+                     }' \
+            --output json | \
+
+        jq -r '.[][] | 
+          [
+            (.InstanceId // "N/A"), 
+            (.Name // "N/A"), 
+            (.PlatformDetails // "N/A"), 
+            (.PrivateIpAddress // "N/A"), 
+            (.State // "N/A"),
+            (.KeyName // "N/A"), 
+            (.AvailabilityZone // "N/A"), 
+            (.InstanceType // "N/A"), 
+            (.SecurityGroups | map("\(.GroupName) (\(.GroupId))") | join(",") // "N/A"),
+            (.Tags | map(select(.Key != "Name") | "\(.Key): \(.Value)") | join(",") // "N/A")
+            ] | @tsv' 
+    ) | _aws_instance_connect_tabalign
+}
+
