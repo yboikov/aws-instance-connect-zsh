@@ -55,7 +55,7 @@ _aws_instance_connect_get_instances() {
             (.AvailabilityZone // "N/A"), 
             (.InstanceType // "N/A"), 
             (.SecurityGroups | map("\(.GroupName) (\(.GroupId))") | join(",") // "N/A"),
-            (.Tags | map(select(.Key != "Name") | "\(.Key): \(.Value)") | join(",") // "N/A")
+            (.Tags // []| map(select(.Key != "Name") | "\(.Key): \(.Value)") | join(",") // "N/A")
             ] | @tsv' 
     ) | _aws_instance_connect_tabalign
 }
