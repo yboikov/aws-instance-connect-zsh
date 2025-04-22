@@ -16,7 +16,7 @@ _aws_instance_connect_parse() {
       --bind="ctrl-/:toggle-preview" \
       --bind="enter:become(echo {1}; echo {2})" \
       --header-lines=1 \
-      --with-nth=2,4,5,8,10 \
+      --with-nth=2,4,3,8,10 \
       "${AWS_INSTANCE_CONNECT_ZSH_FZF_OPTS[@]:-$FZF_DEFAULT_OPTS[@]}" \
       --preview='
           echo {} | awk -F"\t" "{
