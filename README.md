@@ -1,7 +1,7 @@
 # aws-instance-connect-zsh
 
 A Zsh plugin for quickly connecting to AWS EC2 instances using [EC2 Instance Connect](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-methods.html), with interactive fuzzy search powered by [`fzf`](https://github.com/junegunn/fzf).
-
+![Scrrenshort](https://github.com/yboikov/aws-instance-connect-zsh/blob/b13ffa2932874d5b395a900b95623dd014d50607/Screenshot.png)
 ## ✨ Features
 
 - 🔍 **Fuzzy Search** EC2 instances with `fzf`
@@ -25,7 +25,7 @@ A Zsh plugin for quickly connecting to AWS EC2 instances using [EC2 Instance Con
 Clone into your Oh My Zsh custom plugins directory:
 
 ```bash
-git clone https://github.com/<your-username>/aws-instance-connect-zsh.git ~/.oh-my-zsh/custom/plugins/aws-instance-connect-zsh
+git clone https://github.com/yboikov/aws-instance-connect-zsh.git ~/.oh-my-zsh/custom/plugins/aws-instance-connect-zsh
 ```
 
 Then enable the plugin in your `.zshrc`:
